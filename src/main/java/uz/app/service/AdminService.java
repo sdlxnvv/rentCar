@@ -9,8 +9,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -106,8 +104,8 @@ public class AdminService {
 
         Map<Car, Long> rentalsCountPerCar = DB.rentals.stream()
                 .collect(Collectors.groupingBy(
-                        Rental::getCar,           // группируем по машине
-                        Collectors.counting()     // считаем аренды
+                        Rental::getCar,
+                        Collectors.counting()
                 ));
 
         System.out.println("📊 Count of rent: ");

@@ -7,7 +7,6 @@ import uz.app.entity.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class DB {
     // scanners
