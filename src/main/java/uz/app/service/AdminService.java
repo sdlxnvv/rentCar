@@ -2,10 +2,16 @@ package uz.app.service;
 
 import uz.app.db.DB;
 import uz.app.entity.Car;
+import uz.app.entity.Rental;
 import uz.app.enums.CarColor;
 
+import java.time.temporal.ChronoUnit;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class AdminService {
@@ -21,6 +27,7 @@ public class AdminService {
                     
                     0. exit
                     =>\s""");
+
             switch (DB.scannerInt.nextInt()) {
                 case 1 -> addCar();
                 case 2 -> showCars();
@@ -50,11 +57,11 @@ public class AdminService {
         boolean carExists = DB.cars.stream()
                 .anyMatch(u -> u.getName().equals(car.getName()));
 
-        if (carExists) {
-            System.out.println("❌Car already exists!");
-        } else {
+        if (!carExists) {
             System.out.println("✅Car added!");
             DB.cars.add(car);
+        } else {
+            System.out.println("❌Car already exists!");
         }
     }
 
@@ -62,7 +69,6 @@ public class AdminService {
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         DB.cars.forEach(System.out::println);
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-
     }
 
     private void manageCar() {
@@ -70,13 +76,13 @@ public class AdminService {
         if (!DB.cars.isEmpty()) {
             while (!isExit) {
                 System.out.print("""
-                    1. edit name
-                    2. edit price
-                    3. edit color
-                    4. delete car
-                    
-                    0. exit
-                    =>\s""");
+                        1. edit name
+                        2. edit price
+                        3. edit color
+                        4. delete car
+                        
+                        0. exit
+                        =>\s""");
                 switch (DB.scannerInt.nextInt()) {
                     case 1 -> editCarName();
                     case 2 -> editCarPrice();
@@ -92,7 +98,33 @@ public class AdminService {
     }
 
     private void showReport() {
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        if (DB.rentals.isEmpty()) {
+            System.out.println("❌ Пока нет аренд.");
+            return;
+        }
 
+        Map<Car, Long> rentalsCountPerCar = DB.rentals.stream()
+                .collect(Collectors.groupingBy(
+                        Rental::getCar,           // группируем по машине
+                        Collectors.counting()     // считаем аренды
+                ));
+
+        System.out.println("📊 Count of rent: ");
+        rentalsCountPerCar.forEach((car, count) -> {
+            System.out.println("🚗 " + car.getName() + " — " + count);
+        });
+        System.out.println();
+        long totalSum = DB.rentals.stream()
+                .mapToLong(r -> {
+                    long days = ChronoUnit.DAYS.between(r.getStartDate(), r.getEndDate()) + 1;
+                    return r.getCar().getPriceForDay() * days;
+                })
+                .sum();
+
+        System.out.println("💰Total sum: " + totalSum);
+
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     }
 
 

@@ -6,8 +6,8 @@ import uz.app.entity.User;
 import java.util.UUID;
 
 public class AuthService {
-    UserService userService = new UserService();
-    AdminService adminService = new AdminService();
+    private final UserService userService = new UserService();
+    private final AdminService adminService = new AdminService();
 
     public void signIn() {
         System.out.print("Please enter your name: ");
