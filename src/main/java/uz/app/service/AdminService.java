@@ -102,14 +102,14 @@ public class AdminService {
             return;
         }
 
-        Map<Car, Long> rentalsCountPerCar = DB.rentals.stream()
+        Map<Car, Long> totalRentalCars = DB.rentals.stream()
                 .collect(Collectors.groupingBy(
                         Rental::getCar,
                         Collectors.counting()
                 ));
 
         System.out.println("📊 Count of rent: ");
-        rentalsCountPerCar.forEach((car, count) -> {
+        totalRentalCars.forEach((car, count) -> {
             System.out.println("🚗 " + car.getName() + " — " + count);
         });
         System.out.println();
