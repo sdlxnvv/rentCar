@@ -98,7 +98,7 @@ public class AdminService {
     private void showReport() {
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         if (DB.rentals.isEmpty()) {
-            System.out.println("❌ Пока нет аренд.");
+            System.out.println("❌No have any rentals!");
             return;
         }
 
