@@ -1,5 +1,8 @@
 package uz.app.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum CarColor {
     RED("Qizil"),
     BLUE("Ko'k"),
@@ -16,7 +19,4 @@ public enum CarColor {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
 }
